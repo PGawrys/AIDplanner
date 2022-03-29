@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-{% block sikorka %}
+{% block MAINBLOCK %}
     <form method="post">
         {% csrf_token %}
         <input type="text" placeholder="name" name="name">
-        <input type="text" placeholder="topic" name="topic">
+        <input type="text" placeholder="address" name="address">
+        <input type="text" placeholder="details" name="details">
         <input type="submit">
     </form>
 {% endblock %}

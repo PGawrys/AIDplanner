@@ -27,8 +27,23 @@ class LoginView(View):
 
 class LogOutView(View):
     def get(self, request):
+        logout(request)
+        return redirect('index')
+
+
+class RegisterView(View):
+    def get(self, request):
         form = CreateUserForm()
-        return render(request, 'form.html', {'form':form})
+        return render(request, 'form.html', {'form': form})
+
+    def post(self, request):
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['pass1'])
+            user.save()
+            return redirect('login')
+        return render(request, 'form.html', {'form': form})
 
 
 class UserListView(View):
