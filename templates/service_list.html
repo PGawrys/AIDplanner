@@ -1,0 +1,24 @@
+{% extends 'collections.html' %}
+{% block MAINBLOCK %}
+    <div>
+    WYPELNIACZ O ZBIORKACH {{ servicelist }}
+
+
+    {% for service in servicelist.post_set.all %}
+    <p>
+    <div style="border: solid; border-width: 1px;">
+        {{ service.name }}
+        {{ service.description }}
+        {{ service.hours_needed }}
+        {{ service.people_needed }}
+
+    </div>
+    </p>
+    {% endfor %}
+    </div>
+     <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit">
+    </form>
+{% endblock %}

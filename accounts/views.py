@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth import authenticate, login, logout
+from django.views.generic import ListView
 
 from accounts.forms import LoginFormView, CreateUserForm, UserPermUpdateForm
 
@@ -46,7 +47,7 @@ class RegisterView(View):
         return render(request, 'form.html', {'form': form})
 
 
-class UserListView(View):
+class UserListView(ListView):
     model = User
     template_name = 'accounts/user_list_view.html'
 

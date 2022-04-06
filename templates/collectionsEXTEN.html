@@ -1,0 +1,15 @@
+{%  extends 'collections.html' %}
+{%  block MAINBLOCK %}
+    <h1>Item Collections:</h1>
+{% for list in itemlist %}
+    <p>{{ list.name }}</p>
+    <p>{{ list.description }}</p>
+    <p>{{ list.spot.name }}</p>
+{%  endfor %}
+    <h1>Services needed:</h1>
+{% for service in servicelist %}
+    <p>{{ service.name }}</p>
+    <p>{{ service.description }}</p>
+    <p>{{ service.spot }}</p>
+{%  endfor %}
+{% endblock %}

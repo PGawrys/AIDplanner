@@ -24,6 +24,20 @@ class AddSpotForm(forms.Form):
     details = forms.CharField(widget=forms.Textarea())
 
 
+class AddItemList(forms.Form):
+    name = forms.CharField(widget=forms.Textarea())
+    spot = forms.ModelChoiceField(queryset=Spot.objects.all())
+    description = forms.CharField(widget=forms.Textarea())
+    items = forms.ModelMultipleChoiceField(queryset=Item.objects.all())
+
+
+class AddServiceList(forms.Form):
+    name = forms.CharField(widget=forms.Textarea())
+    spot = forms.ModelChoiceField(queryset=Spot.objects.all())
+    description = forms.CharField(widget=forms.Textarea())
+    services = forms.ModelMultipleChoiceField(queryset=Service.objects.all())
+
+
 class AddItemModelForm(forms.ModelForm):
 
     class Meta:
@@ -36,3 +50,5 @@ class AddServiceModelForm(forms.ModelForm):
         model = Service
         fields = '__all__'
 
+
+# class AddCollection

@@ -34,3 +34,51 @@ body {
 .jakies_styl{
     background-color: darkmagenta;
 }
+
+
+
+/*------------------------------*/
+/*---- Main style ----*/
+/*------------------------------*/
+:root {
+  --link-color: #ff6600;
+  --light-link-color: #fffffa;
+  --background-color: #4b4c4a;
+  --lighter-background-color: #5a615f;
+  --lighter-text-color: #9fa292;
+  --dark-text: #000000;
+  --blue: #007bff;
+  --yellow: #ffc107;
+  --green: #1e7e34;
+  font-size: 16px;
+}
+
+
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  opacity: 1 !important;
+  outline: black;
+  background-image: none;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-size: 55px;
+  color: var(--dark-text);
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 55px;
+  color: var(--dark-text);
+}
+
+.carousel-caption {
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  font-weight: 600;
+  color: var(--dark-text) !important;
+}

@@ -14,9 +14,9 @@
 <div class="topnav">
     <a href="{% url 'index' %}">Main Page</a>
     <a href="{% url 'index2' %}">TEMPORARY</a>
-    <a href="{% url 'add_spot' %}">Collections</a>
-    <a href="{% url 'show_spot' %}">Stats</a>
-    <a href="{% url 'add_item' %}">Schedule</a>
+    <a href="{% url 'collections' %}">Collections</a>
+    <a href="{% url 'stats' %}">Stats</a>
+    <a href="{% url 'schedule' %}">Schedule</a>
 
     <a href="{% url 'userlist' %}">Users</a>
     {% if user.is_authenticated %}
@@ -26,9 +26,6 @@
         <a href="{% url 'register' %}"> register</a>
     {% endif %}
 </div>
-<p>
-    {% block MAINBLOCK %}
-        Strona główna
 <section class="padding-large bg-light">
         <div id="carouselExampleControls" class="carousel slide main-slider" data-ride="carousel">
             <div class="carousel-inner container">
@@ -61,10 +58,14 @@
             </a>
         </div>
     </section>
+<p>
+    {% block MAINBLOCK %}
+        Strona główna
+
     {% endblock %}
 </p>
 
-<p><img src="{% static 'pobrane.jfif' %}"> {{ date }}</p>
+<p><img src="{% static 'rzutwieza.jpg' %}"> {{ date }}</p>
 {{ user }}
 </body>
 </html>

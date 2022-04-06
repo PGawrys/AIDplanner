@@ -1,0 +1,34 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <title>Document</title>
+</head>
+<body>
+<h1><strong>CURRENT COLLECTIONS AND NEEDS</strong></h1>
+
+<div class="topnav">
+    <a href="{% url 'index' %}">Main Page</a>
+    <a href="{% url 'collections' %}">Collections</a>
+    <a href="{% url 'add_item_list' %}">Add Item Collection</a>
+    <a href="{% url 'add_service_list' %}">Add Service Request</a>
+    <a href="{% url 'show_spot' %}">Spots</a>
+    <a href="{% url 'item_list' %}">Items</a>
+    <a href="{% url 'service_list' %}">Services</a>
+
+
+</div>
+
+
+{% block MAINBLOCK %}
+
+{%  endblock %}
+
+<p><img src="{% static 'rzutwieza.jpg' %}"> {{ date }}</p>
+</body>
+</html>

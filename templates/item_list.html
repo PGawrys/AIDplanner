@@ -1,0 +1,24 @@
+{% extends 'collections.html' %}
+{% block MAINBLOCK %}
+    <div>
+{#    <a href="{% url 'add_item' %}">Add Item Type</a>#}
+{#    <a href="{% url 'update_item' %}">Edit Item Type</a>#}
+{#    <a href="{% url 'delete_item' %}">Delete Item Type</a>#}
+    {% for item in itemlist %}
+    <p>
+    <div style="border: solid; border-width: 1px;">
+        {{ item.name }}
+        {{ item.description }}
+        {{ item.number_needed }}
+        {{ item.number_delivered }}
+
+    </div>
+    </p>
+    {% endfor %}
+    </div>
+     <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit">
+    </form>
+{% endblock %}

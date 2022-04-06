@@ -19,7 +19,7 @@ class Service(models.Model):
     description = models.CharField(max_length=640)
     people_needed = models.IntegerField()
     hours_needed = models.IntegerField()
-    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)   #czy to tu potrzebne?
 
 
 class Item(models.Model):
@@ -31,10 +31,26 @@ class Item(models.Model):
     number_needed = models.IntegerField()
     number_delivered = models.IntegerField(null=True)
 
-#
-# class Item_List(models.Model):
-#
-#
-# class Service_List(models.Model):
+
+class ItemList(models.Model):
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=128)
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True)
+    description = models.TextField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    items = models.ForeignKey(Item, on_delete=models.CASCADE)
 
 
+class ServiceList(models.Model):
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=128)
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True)
+    description = models.TextField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    services = models.ForeignKey(Service, on_delete=models.CASCADE)
+
+#  DATA OD DO?
