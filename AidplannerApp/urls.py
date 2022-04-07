@@ -4,11 +4,11 @@ from django.urls import path
 from AidplannerApp import views
 
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
+    path('', views.IndexView.as_view(), name='index'),   # 1 test
     path('drugi/', views.IndexView2.as_view(), name='index2'),           # v
-    path('add_spot/', views.AddSpot.as_view(), name='add_spot'),         # v
-    path('collections/show_spot/', views.ShowSpot.as_view(), name='show_spot'),      # v
-    path('add_item/', views.AddItemView.as_view(), name='add_item'),     # v
+    path('add_spot/', views.AddSpot.as_view(), name='add_spot'),         # 2 testy (logged in i logged out)
+    path('collections/show_spot/', views.ShowSpot.as_view(), name='show_spot'),      # 1 test
+    path('add_item/', views.AddItemView.as_view(), name='add_item'),     # 2 testy (logged in i logged out)
     path('collections/show_item/', views.ShowItem.as_view(), name='show_item'),      # v
     path('collections/show_service/', views.ShowService.as_view(), name='show_service'),  # v
     path('spot/<int:id>/', views.ShowDetailSpot.as_view(), name='show_detail_spot'),   # v

@@ -38,7 +38,7 @@ class AddSpot(LoginRequiredMixin, View):
         return redirect('add_spot')
 
 
-class AddItemView(View):     #dawny addPOSTview
+class AddItemView(View):
 
     def get(self, request):
         form = AddItemForm()
@@ -74,31 +74,31 @@ class AddServiceView(View):     #dawny addPOSTview
         return render(request, 'form.html', {'form': form})
 
 
-class ShowItem(View):         #dawny showPOST
+class ShowItem(View):
 
     def get(self, request):
         return render(request, 'list.html', {'object_list': Item.objects.all()})
 
 
-class ShowService(View):         #dawny showPOST
+class ShowService(View):
 
     def get(self, request):
         return render(request, 'list.html', {'object_list': Service.objects.all()})
 
 
-class ShowSpot(View):        #dawny ShowBLOG
+class ShowSpot(View):
 
     def get(self, request):
         return render(request, 'list.html', {'object_list': Spot.objects.all()})
 
 
-class ShowStatsView(View):        #dawny ShowBLOG
+class ShowStatsView(View):
 
     def get(self, request):
         return render(request, 'stats.html')
 
 
-class ShowScheduleView(View):        #dawny ShowBLOG
+class ShowScheduleView(View):
 
     def get(self, request):
         return render(request, 'schedule.html')
@@ -189,10 +189,6 @@ class DeleteServiceView(View):            # dawny delete POST
         service.delete()
         return redirect('show_service')
 
-
-# class ShowCollectionsView(View):
-#     def get(self, request):
-#         return render(request, 'list.html', {'object_list': ItemList.objects.all()}, {'object_list': ServiceList.objects.all()})
 
 class ShowCollectionsView(View):
 
