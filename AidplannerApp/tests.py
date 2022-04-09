@@ -1,10 +1,8 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
 import pytest
 from django.test import Client
 from django.urls import reverse
 
-from AidplannerApp.models import Spot, Item
+from AidplannerApp.models import Spot, Item, Service
 
 
 @pytest.mark.django_db
@@ -41,16 +39,6 @@ def test_show_spots(spots):
     assert response.context['object_list'].count() == len(spots)
     for spot in spots:
         assert spot in response.context['object_list']
-#
-# @pytest.mark.django_db
-# def test_post_list(posts):
-#     client = Client()
-#     url = reverse("show_post")
-#     response = client.get(url)
-#     assert response.status_code == 200
-#     assert response.context['object_list'].count() == len(posts)
-#     for post in posts:
-#         assert post in response.context['object_list']
 
 
 @pytest.mark.django_db
@@ -58,7 +46,7 @@ def test_check_add_spot_logged_out():
     client = Client()
     url = reverse("add_spot")
     response = client.get(url)
-    assert response.status_code == 302   # bo w bazowej wersji nie jestesmy zalogowani wiec code 302
+    assert response.status_code == 302
 
 
 @pytest.mark.django_db
@@ -67,27 +55,62 @@ def test_add_spot_logged_in(user):
     client = Client()
     client.force_login(user)
     data = {'name':'x', 'address':'ulica 1 m 10', 'details':'za rogiem'}
-    response = client.post(url, data)         #czy wchodzi i czy udalo sie dane przeslac bo POST jak get to response 200
-    assert response.status_code == 302
-    Spot.objects.get(name='x', address='ulica 1 m 10', details='za rogiem')   #nie trzeba asserta
-
-@pytest.mark.django_db
-def test_check_add_item_logged_out():
-    client = Client()
-    url = reverse("add_item")
-    response = client.get(url)
-    assert response.status_code == 200        #a moze redirect w view? wtedy 302
-
-
-@pytest.mark.django_db
-def test_add_item_logged_in(user):
-    url = reverse("add_item")
-    client = Client()
-    client.force_login(user)
-    data = {'name':'x', 'description':'przedmiot', 'number_needed':15, 'number_delivered':5 }
     response = client.post(url, data)
     assert response.status_code == 302
-    Item.objects.get(name='x', description='przedmiot', number_needed=15, number_delivered=5)
+    Spot.objects.get(name='x', address='ulica 1 m 10', details='za rogiem')
+
+
+@pytest.mark.django_db
+def test_show_edit_item_details(user):
+    url = reverse("item_list")
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'x', 'description': 'xyz'}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    Item.objects.get(name='x', description='xyz')
+
+
+@pytest.mark.django_db
+def test_show_edit_service_details(user):
+    url = reverse("service_list")
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'test', 'description': 'testtest'}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    Service.objects.get(name='test', description='testtest')
+
+
+@pytest.mark.django_db
+def test_show_spot_details(spot, user):
+    url = reverse("show_detail_spot", kwargs={'id':1})
+    client = Client()
+    client.force_login(user)
+    data = {'name':'y', 'address':'ulica 2 m 345', 'details':'important details'}
+    response = client.post(url, data)
+    assert response.status_code == 200
+    Spot.objects.get(name='y', address='ulica 2 m 345', details='important details')
+
+
+@pytest.mark.django_db                           # NIE PRZECHODZI NIE POTRZEBNY
+def test_show_detail_spot_logged_out():
+    client = Client()
+    url = reverse("show_detail_spot")
+    response = client.get(url)
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db                             # NIE PRZECHODZI NIE POTRZEBNY
+def test_show_detail_spot_logged_in(user):
+    client = Client()
+    client.force_login(user)
+    data = {'name':'x', 'address':'walbrzyska 5/7', 'description':'budka zielona'}
+    url = reverse("show_detail_spot")
+    response = client.get(url, data)
+    assert response.status_code == 200
+    Spot.objects.get(name='x', address='walbrzyska 5/7', description='budka zielona')
+
 
 # @pytest.mark.django_db
 # def test_register_user():

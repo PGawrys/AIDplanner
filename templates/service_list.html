@@ -1,21 +1,22 @@
 {% extends 'collections.html' %}
 {% block MAINBLOCK %}
     <div>
-    WYPELNIACZ O ZBIORKACH {{ servicelist }}
+    LISTA USLUG
+    wypełniacz
 
 
-    {% for service in servicelist.post_set.all %}
+    {% for service in servicelist %}
     <p>
     <div style="border: solid; border-width: 1px;">
-        {{ service.name }}
-        {{ service.description }}
-        {{ service.hours_needed }}
-        {{ service.people_needed }}
-
+        Name: {{ service.name }}<br>
+        Description: {{ service.description }}<br>
     </div>
+        <a href="{% url 'update_service' service.id %}">Edit Service Type</a>
+        <a href="{% url 'delete_service' service.id %}">Delete Service Type</a>
     </p>
     {% endfor %}
     </div>
+    <p>Add Service</p>
      <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

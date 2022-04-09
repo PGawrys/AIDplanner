@@ -15,8 +15,8 @@
 <div class="topnav">
     <a href="{% url 'index' %}">Main Page</a>
     <a href="{% url 'collections' %}">Collections</a>
-    <a href="{% url 'add_item_list' %}">Add Item Collection</a>
-    <a href="{% url 'add_service_list' %}">Add Service Request</a>
+    <a href="{% url 'add_collection_item' %}">Add Item Collection</a>
+    <a href="{% url 'add_collection_service' %}">Add Service Request</a>
     <a href="{% url 'show_spot' %}">Spots</a>
     <a href="{% url 'item_list' %}">Items</a>
     <a href="{% url 'service_list' %}">Services</a>
@@ -29,6 +29,6 @@
 
 {%  endblock %}
 
-<p><img src="{% static 'rzutwieza.jpg' %}"> {{ date }}</p>
+<p><img src="{% static 'rzutwieza.jpg' %}" width="400" height="250"> {{ date }}</p>
 </body>
 </html>

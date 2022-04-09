@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth.models import User
 
 from AidplannerApp.models import User, Spot, Item
 
@@ -23,6 +22,10 @@ def spots():
         s = Spot.objects.create(name=i)
         spots.append(s)
     return spots
+
+@pytest.fixture
+def spot():
+    return Spot.objects.create(name='y', address='ulica 2 m 345', details='important details')
 
 @pytest.fixture
 def items():

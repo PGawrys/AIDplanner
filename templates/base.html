@@ -13,11 +13,9 @@
 <h1><strong>AID coordinator</strong></h1>
 <div class="topnav">
     <a href="{% url 'index' %}">Main Page</a>
-    <a href="{% url 'index2' %}">TEMPORARY</a>
     <a href="{% url 'collections' %}">Collections</a>
     <a href="{% url 'stats' %}">Stats</a>
     <a href="{% url 'schedule' %}">Schedule</a>
-
     <a href="{% url 'userlist' %}">Users</a>
     {% if user.is_authenticated %}
         <a href="{% url 'logout' %}"> logout</a>
@@ -26,46 +24,25 @@
         <a href="{% url 'register' %}"> register</a>
     {% endif %}
 </div>
-<section class="padding-large bg-light">
-        <div id="carouselExampleControls" class="carousel slide main-slider" data-ride="carousel">
-            <div class="carousel-inner container">
-                <div class="carousel-item active">
-                    <div class="container w-75 d-flex">
-                        <div class="carousel-caption d-block">
-                            <h1>KARUZELA ZBIOREK (poki co podpiete SPOTy)</h1>
-                            <h3> jakis wypelniacz o zbiorkach</h3>
-                        </div>
-                    </div>
-                </div>
-                {% for spot in spots %}
-                <div class="carousel-item">
-                    <div class="container w-75 d-flex">
-                        <div class="carousel-caption d-block">
-                            <h1> {{ spot.name }} </h1>
-                            <h3> {{ spot.address }} </h3>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-    </section>
 <p>
     {% block MAINBLOCK %}
-        Strona główna
+        <h1>Main Page</h1>
+        <br>
+        <p>filler:</p>
+        <p>Welcome to AidPlanner, a page made to help to organise Collections of Items, Utilities etc in different spots,<br> as
+            well as directing a variety of needed services to different refugee aid centers. <br>Feel free to look around and maybe contribute yourself.</p>
 
+        <p>Future features will include:</p>
+        <ul>Ability for users to join and be displayed as "members" of different collections along with their contribution</ul>
+        <ul>Abiity to schedule an estimated ETA of arrival of items or people providing service to different spots</ul>
+        <ul>Schedule table, with current ETA's of number of specific items arriving to different spots</ul>
+        <ul>Statistics shown by spot, to track aid activity over time</ul>
+        <ul>and more</ul>
     {% endblock %}
 </p>
 
-<p><img src="{% static 'rzutwieza.jpg' %}"> {{ date }}</p>
-{{ user }}
+<p><img src="{% static 'rzutwieza.jpg' %}" width="400" height="250"></p>
+<p>{{ date }}</p>
+<p>Currently logged in: {{ user }}</p>
 </body>
 </html>

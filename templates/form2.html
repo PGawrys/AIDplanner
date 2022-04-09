@@ -3,6 +3,18 @@
     <form method="post">
     {% csrf_token %}
         {{ form.as_p }}
+        {% if items %}
+        {% for item in items.all %}
+        <p><label>{{ item }}</label>
+            <input type="checkbox" name="items" value="{{ item.pk }}" /></p>
+        {% endfor %}
+        {% endif %}
+        {% if services %}
+        {% for service in services.all %}
+        <p><label>{{ service }}</label>
+            <input type="checkbox" name="services" value="{{ service.pk }}" /></p>
+        {% endfor %}
+        {% endif %}
     <input type="submit">
     </form>
 {% endblock %}

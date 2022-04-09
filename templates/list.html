@@ -2,6 +2,9 @@
 {% extends 'collections.html' %}
 {% block MAINBLOCK %}
     <ul>
+        {% if spot %}
+            <a href={% url 'add_spot' %}> <button>Add new spot</button></a>
+        {% endif %}
         {% for item in object_list %}
             <li>
                 <a href="{{ item.get_absolute_url }}">{{item}}</a>

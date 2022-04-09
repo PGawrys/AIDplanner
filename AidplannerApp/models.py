@@ -1,10 +1,20 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 
 class Spot(models.Model):
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('show_detail_spot', kwargs={'id': self.id})
+
+    def get_update_url(self):
+        return reverse('update_spot', kwargs={'id': self.id})
+
+    def get_delete_url(self):
+        return reverse('delete_spot', kwargs={'id': self.id})
 
     name = models.CharField(max_length=64)
     address = models.CharField(max_length=128)
@@ -15,24 +25,56 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+    def get_update_url(self):
+        return reverse('update_service', kwargs={'id': self.id})
+
+    def get_delete_url(self):
+        return reverse('delete_service', kwargs={'id': self.id})
+
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=640)
-    people_needed = models.IntegerField()
-    hours_needed = models.IntegerField()
-    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)   #czy to tu potrzebne?
 
 
 class Item(models.Model):
     def __str__(self):
         return self.name
 
+    def get_update_url(self):
+        return reverse('update_item', kwargs={'id': self.id})
+
+    def get_delete_url(self):
+        return reverse('delete_item', kwargs={'id': self.id})
+
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=360)
-    number_needed = models.IntegerField()
+
+
+class ItemCollection(models.Model):
+
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=128)
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True)
+    description = models.TextField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    items = models.ManyToManyField(Item, through='ItemCollectionItems')
+
+
+class ItemCollectionItems(models.Model):
+
+    def __str__(self):
+        return self.item.name
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    itemcollection = models.ForeignKey(ItemCollection, on_delete=models.CASCADE)
+    number_needed = models.IntegerField(null=True)
     number_delivered = models.IntegerField(null=True)
 
 
-class ItemList(models.Model):
+
+class ServiceCollection(models.Model):
+
     def __str__(self):
         return self.name
 
@@ -40,17 +82,15 @@ class ItemList(models.Model):
     spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True)
     description = models.TextField(null=True)
     created = models.DateTimeField(auto_now_add=True)
-    items = models.ForeignKey(Item, on_delete=models.CASCADE)
+    services = models.ManyToManyField(Service, through='ServiceCollectionServices')
 
 
-class ServiceList(models.Model):
+class ServiceCollectionServices(models.Model):
+
     def __str__(self):
-        return self.name
+        return self.service.name
 
-    name = models.CharField(max_length=128)
-    spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True)
-    description = models.TextField(null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    services = models.ForeignKey(Service, on_delete=models.CASCADE)
-
-#  DATA OD DO?
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    servicecollection = models.ForeignKey(ServiceCollection, on_delete=models.CASCADE)
+    people_needed = models.IntegerField(null=True)
+    hours_needed = models.IntegerField(null=True)

@@ -1,6 +1,5 @@
 from django import forms
-# from django.core.exceptions import ValidationError
-from AidplannerApp.models import Item, Service, Spot
+from AidplannerApp.models import Item, Service, Spot, ItemCollection, ServiceCollection
 
 
 class AddItemForm(forms.Form):
@@ -18,24 +17,28 @@ class AddServiceForm(forms.Form):
     spot = forms.ModelChoiceField(queryset=Spot.objects.all())
 
 
-class AddSpotForm(forms.Form):
+class AddSpotForm(forms.ModelForm):
     name = forms.CharField(widget=forms.Textarea())
     address = forms.CharField(widget=forms.Textarea())
     details = forms.CharField(widget=forms.Textarea())
 
-
-class AddItemList(forms.Form):
-    name = forms.CharField(widget=forms.Textarea())
-    spot = forms.ModelChoiceField(queryset=Spot.objects.all())
-    description = forms.CharField(widget=forms.Textarea())
-    items = forms.ModelMultipleChoiceField(queryset=Item.objects.all())
+    class Meta:
+        model = Spot
+        fields = '__all__'
 
 
-class AddServiceList(forms.Form):
-    name = forms.CharField(widget=forms.Textarea())
-    spot = forms.ModelChoiceField(queryset=Spot.objects.all())
-    description = forms.CharField(widget=forms.Textarea())
-    services = forms.ModelMultipleChoiceField(queryset=Service.objects.all())
+class AddItemCollectionForm(forms.ModelForm):
+
+    class Meta:
+        model = ItemCollection
+        exclude = ['items']
+
+
+class AddServiceCollectionForm(forms.ModelForm):
+
+    class Meta:
+        model = ServiceCollection
+        exclude = ['services']
 
 
 class AddItemModelForm(forms.ModelForm):
@@ -51,4 +54,3 @@ class AddServiceModelForm(forms.ModelForm):
         fields = '__all__'
 
 
-# class AddCollection
