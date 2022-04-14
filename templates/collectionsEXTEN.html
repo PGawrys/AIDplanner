@@ -10,8 +10,8 @@
     <p>{{ collection.spot.name }}</p>
     Items:
     <ul>
-    {% for item in collection.items.all %}
-    <li>{{ item.name }}</li>
+    {% for item in collection.itemcollectionitems_set.all %}
+    <li>{{ item.item.name }}<br> Items needed: {{ item.number_needed }}<br>Items delivered: {{ item.number_delivered }}</li>
     {% endfor %}
     </ul>
 {%  endfor %}
@@ -22,10 +22,10 @@
         <a href="delete_service_collection/{{ collection.id }}/"><button>Delete</button></a></p>
     <p>{{ collection.description }}</p>
     <p>{{ collection.spot }}</p>
-        Items:
+        Services:
     <ul>
-    {% for service in collection.services.all %}
-    <li>{{ service.name }}</li>
+    {% for service in collection.servicecollectionservices_set.all %}
+    <li>{{ service.service.name }}<br>People needed: {{ service.people_needed }}<br>Hours needed: {{ service.hours_needed }}</li>
     {% endfor %}
     </ul>
 {%  endfor %}

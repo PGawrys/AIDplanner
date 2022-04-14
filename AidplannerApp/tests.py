@@ -1,8 +1,9 @@
 import pytest
+from django.contrib.auth.models import User
 from django.test import Client
 from django.urls import reverse
 
-from AidplannerApp.models import Spot, Item, Service
+from AidplannerApp.models import Spot, Item, Service, ItemCollection, ServiceCollection
 
 
 @pytest.mark.django_db
@@ -11,10 +12,21 @@ def test_initial():
 
 
 @pytest.mark.django_db
-def test_index():
+def test_register_user():
+    url = reverse("register")
     client = Client()
-    url = reverse("index")
-    response = client.get(url)
+    data = {'username':'user', 'pass1':'user', 'pass2':'user'}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    User.objects.get(username='user')
+    client.login(username="user", password="user")
+
+@pytest.mark.django_db
+def test_login():
+    url = reverse("login")
+    client = Client()
+    data = {'username':'user', 'pass1':'user', 'pass2':'user'}
+    response = client.post(url, data)
     assert response.status_code == 200
 
 
@@ -28,6 +40,37 @@ def test_user_list(users):
     for user in users:
         assert user in response.context['object_list']
 
+
+@pytest.mark.django_db
+def test_index():
+    client = Client()
+    url = reverse("index")
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_collections():
+    client = Client()
+    url = reverse("collections")
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_schedule():
+    client = Client()
+    url = reverse("schedule")
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_stats():
+    client = Client()
+    url = reverse("stats")
+    response = client.get(url)
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
@@ -93,42 +136,86 @@ def test_show_spot_details(spot, user):
     Spot.objects.get(name='y', address='ulica 2 m 345', details='important details')
 
 
-@pytest.mark.django_db                           # NIE PRZECHODZI NIE POTRZEBNY
-def test_show_detail_spot_logged_out():
-    client = Client()
-    url = reverse("show_detail_spot")
-    response = client.get(url)
-    assert response.status_code == 302
-
-
-@pytest.mark.django_db                             # NIE PRZECHODZI NIE POTRZEBNY
-def test_show_detail_spot_logged_in(user):
+@pytest.mark.django_db
+def test_show_add_item_collection(user):
+    url = reverse("add_collection_item")
     client = Client()
     client.force_login(user)
-    data = {'name':'x', 'address':'walbrzyska 5/7', 'description':'budka zielona'}
-    url = reverse("show_detail_spot")
-    response = client.get(url, data)
+    response = client.get(url)
     assert response.status_code == 200
-    Spot.objects.get(name='x', address='walbrzyska 5/7', description='budka zielona')
+
+
+@pytest.mark.django_db
+def test_add_item_collection(user, item, spot):
+    url = reverse("add_collection_item")
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'xyz', 'spot': spot.id, 'description': 'o', 'items': [item.id]}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    assert ItemCollection.objects.filter(name='xyz').count() == 1
+
+
+@pytest.mark.django_db
+def test_show_add_service_collection(user):
+    url = reverse("add_collection_service")
+    client = Client()
+    client.force_login(user)
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_add_service_collection(user, service, spot):
+    url = reverse("add_collection_service")
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'xyz', 'spot': spot.id, 'description': 'o', 'services': [service.id]}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    assert ServiceCollection.objects.filter(name='xyz').count() == 1
+
+
+@pytest.mark.django_db
+def test_show_edit_item_collection(user, item_collection):
+    url = reverse("update_item_collection", kwargs={'id': item_collection.id})
+    client = Client()
+    client.force_login(user)
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_edit_collection_item(user, item, spot, item_collection):
+    url = reverse("update_item_collection", kwargs={'id': item_collection.id})
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'abc', 'spot': spot.id, 'description': 'o', 'items': [item.id]}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    assert ItemCollection.objects.filter(name='abc').count() == 1
+
+
+@pytest.mark.django_db
+def test_show_edit_service_collection(user, service_collection):
+    url = reverse("update_service_collection", kwargs={'id': service_collection.id})
+    client = Client()
+    client.force_login(user)
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_edit_collection_service(user, service, spot, service_collection):
+    url = reverse("update_service_collection", kwargs={'id': service_collection.id})
+    client = Client()
+    client.force_login(user)
+    data = {'name': 'abc', 'spot': spot.id, 'description': 'o', 'services': [service.id]}
+    response = client.post(url, data)
+    assert response.status_code == 302
+    assert ServiceCollection.objects.filter(name='abc').count() == 1
 
 
 # @pytest.mark.django_db
-# def test_register_user():
-#     url = reverse("register")
-#     client = Client()
-#     data = {'username':'user', 'pass1':'user', 'pass2':'user'}
-#     response = client.post(url, data)         #czy wchodzi i czy udalo sie dane przeslac bo POST jak get to response 200
-#     assert response.status_code == 302
-#     User.objects.get(username='user')               #sprawdza czy dodano usera
-#     client.login(username="user", password="user")  #sprawdza czy uda sie zalogowac z haslem
-#
-#
-# @pytest.mark.django_db
-# def test_add_post(blogs):
-#     url = reverse("add_post")
-#     client = Client()
-#     data = {'text':'nanana','blog':blogs[0].id}
-#     response = client.post(url, data)
-#     assert response.status_code == 302
-#
-#     assert Post.objects.first()     # zwraca true / false
+# def test_update_item_in_collection_view(user, item, item_collection):
+#     url = reverse()

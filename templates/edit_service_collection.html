@@ -1,0 +1,15 @@
+{% extends 'collections.html' %}
+{% block MAINBLOCK %}
+    <form method="post">
+    {% csrf_token %}
+        {{ form.as_p }}
+
+
+    <input type="submit">
+    </form>
+    {% for service_collection_service in servicecollection.servicecollectionservices_set.all %}
+    <li><a href={% url 'update_service_in_collection' service_collection_service.id %}>{{ service_collection_service }}</a><br>
+        Hours needed: {{ service_collection_service.hours_needed }}<br>
+        People needed: {{ service_collection_service.people_needed }}</li>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'collections.html' %}
+{% block MAINBLOCK %}
+    <form method="post">
+    {% csrf_token %}
+        {{ form.as_p }}
+
+
+    <input type="submit">
+    </form>
+    {% for item_collection_item in itemcollection.itemcollectionitems_set.all %}
+    <li><a href={% url 'update_item_in_collection' item_collection_item.id %}>{{ item_collection_item }}</a><br>
+        Quantity needed: {{ item_collection_item.number_needed }}<br>
+        Quantity delivered: {{ item_collection_item.number_delivered }}</li>
+    {% endfor %}
+{% endblock %}

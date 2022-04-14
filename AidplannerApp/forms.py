@@ -1,5 +1,6 @@
 from django import forms
-from AidplannerApp.models import Item, Service, Spot, ItemCollection, ServiceCollection
+from AidplannerApp.models import Item, Service, Spot, ItemCollection, ServiceCollection, ItemCollectionItems, \
+    ServiceCollectionServices
 
 
 class AddItemForm(forms.Form):
@@ -52,5 +53,17 @@ class AddServiceModelForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = '__all__'
+
+
+class EditItemInCollectionForm(forms.ModelForm):
+    class Meta:
+        model = ItemCollectionItems
+        fields = ['number_needed', 'number_delivered']
+
+
+class EditServiceInCollectionForm(forms.ModelForm):
+    class Meta:
+        model = ServiceCollectionServices
+        fields = ['hours_needed', 'people_needed']
 
 

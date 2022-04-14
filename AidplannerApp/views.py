@@ -7,8 +7,9 @@ from django.views import View
 
 
 from AidplannerApp.forms import AddItemModelForm, AddSpotForm, AddServiceModelForm, \
-    AddItemCollectionForm, AddServiceCollectionForm
-from AidplannerApp.models import Spot, Service, Item, ServiceCollection, ItemCollection
+    AddItemCollectionForm, AddServiceCollectionForm, EditItemInCollectionForm, EditServiceInCollectionForm
+from AidplannerApp.models import Spot, Service, Item, ServiceCollection, ItemCollection, ItemCollectionItems, \
+    ServiceCollectionServices
 
 
 class IndexView(View):
@@ -174,7 +175,7 @@ class ShowDetailServiceList(View):
         return render(request, 'service_list.html', {'servicelist': servicelist, 'form': form})
 
 
-class AddCollectionItem(View):
+class AddCollectionItem(LoginRequiredMixin, View):
     """Widok dodający nową zbiórkę przedmiotów. Usługi wybiera się sposród wczesniej dodanych, istniejących przedmiotów (model Item)"""
     def get(self, request):
         form = AddItemCollectionForm()
@@ -187,16 +188,16 @@ class AddCollectionItem(View):
         if form.is_valid():
             collectionitem = form.save()
             items = request.POST.getlist('items')
-            for item in items:
+            for item_id in items:
                 if Item.objects.all().exists():
-                    item = Item.objects.get(id=item)
+                    item = Item.objects.get(id=item_id)
                     collectionitem.items.add(item)
             collectionitem.save()
             return redirect('add_collection_item')
         return render(request, 'form2.html', {'form': form, 'items': items})
 
 
-class AddCollectionService(View):
+class AddCollectionService(LoginRequiredMixin, View):
     """Widok dodający nową zbiórkę usług. Usługi wybiera się sposród wczesniej dodanych, istniejących usług (model Service)"""
     def get(self, request):
         form = AddServiceCollectionForm()
@@ -218,13 +219,13 @@ class AddCollectionService(View):
         return render(request, 'form2.html', {'form': form, 'services': services})
 
 
-class UpdateItemCollectionView(View):
+class UpdateItemCollectionView(LoginRequiredMixin, View):
     """Widok otwierający formularz, tak jak przy tworzeniu nowej zbiórki przedmiotów, pozwalający edytować istniejące już instancje zbiórek przedmiotów."""
 
     def get(self, request, id):
         itemcollection = ItemCollection.objects.get(pk=id)
         form = AddItemCollectionForm(instance=itemcollection)
-        return render(request, 'form2.html', {'form':form})
+        return render(request, 'edit_item_collection.html', {'form':form, 'itemcollection':itemcollection})
 
     def post(self, request, id):
         itemcollection = ItemCollection.objects.get(pk=id)
@@ -232,10 +233,10 @@ class UpdateItemCollectionView(View):
         if form.is_valid():
             form.save()
             return redirect('collections')
-        return render(request, 'form2.html', {'form': form})
+        return render(request, 'edit_item_collection.html', {'form':form, 'itemcollection':itemcollection})
 
 
-class DeleteItemCollectionView(View):
+class DeleteItemCollectionView(LoginRequiredMixin, View):
     """Widok do usuwania zbiórek przedmiotów."""
     def get(self, request, id):
         return render(request, 'form2.html', {})
@@ -246,12 +247,12 @@ class DeleteItemCollectionView(View):
         return redirect('collections')
 
 
-class UpdateServiceCollectionView(View):
+class UpdateServiceCollectionView(LoginRequiredMixin, View):
     """Widok otwierający formularz, tak jak przy tworzeniu nowej zbiórki usług, pozwalający edytować istniejące już instancje zbiórek usług."""
     def get(self, request, id):
         servicecollection = ServiceCollection.objects.get(pk=id)
         form = AddServiceCollectionForm(instance=servicecollection)
-        return render(request, 'form2.html', {'form':form})
+        return render(request, 'edit_service_collection.html', {'form':form, 'servicecollection': servicecollection})
 
     def post(self, request, id):
         servicecollection = ServiceCollection.objects.get(pk=id)
@@ -259,10 +260,10 @@ class UpdateServiceCollectionView(View):
         if form.is_valid():
             form.save()
             return redirect('collections')
-        return render(request, 'form2.html', {'form': form})
+        return render(request, 'edit_service_collection.html', {'form':form, 'servicecollection': servicecollection})
 
 
-class DeleteServiceCollectionView(View):
+class DeleteServiceCollectionView(LoginRequiredMixin, View):
     """Widok do usuwania zbiórek usług."""
     def get(self, request, id):
         return render(request, 'form2.html', {})
@@ -273,7 +274,7 @@ class DeleteServiceCollectionView(View):
         return redirect('collections')
 
 
-class UpdateSpotView(View):
+class UpdateSpotView(LoginRequiredMixin, View):
     """Widok do edytowania lokalizacji."""
     def get(self, request, id):
         spot = Spot.objects.get(pk=id)
@@ -289,7 +290,7 @@ class UpdateSpotView(View):
         return render(request, 'form2.html', {'form': form})
 
 
-class DeleteSpotView(View):
+class DeleteSpotView(LoginRequiredMixin, View):
     """Widok do usuwania lokalizacji."""
     def get(self, request, id):
         return render(request, 'form2.html', {})
@@ -298,3 +299,33 @@ class DeleteSpotView(View):
         spot = Spot.objects.get(pk=id)
         spot.delete()
         return redirect('show_spot')
+
+
+class UpdateItemInCollectionView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        item = ItemCollectionItems.objects.get(id=id)
+        form = EditItemInCollectionForm(instance=item)
+        return render(request, 'form2.html', {'form': form, 'item': item})
+
+    def post(self, request, id):
+        item = ItemCollectionItems.objects.get(id=id)
+        form = EditItemInCollectionForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('collections')
+        return render(request, 'form2.html', {'form': form, 'item': item})
+
+
+class UpdateServiceInCollectionView(LoginRequiredMixin, View):
+    def get(self, request, id):
+        service = ServiceCollectionServices.objects.get(id=id)
+        form = EditServiceInCollectionForm(instance=service)
+        return render(request, 'form2.html', {'form': form, 'service': service})
+
+    def post(self, request, id):
+        service = ServiceCollectionServices.objects.get(id=id)
+        form = EditServiceInCollectionForm(request.POST, instance=service)
+        if form.is_valid():
+            form.save()
+            return redirect('collections')
+        return render(request, 'form2.html', {'form': form, 'service': service})
